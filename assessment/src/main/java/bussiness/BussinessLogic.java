@@ -1,6 +1,10 @@
 package bussiness;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BussinessLogic {
@@ -19,15 +23,29 @@ public class BussinessLogic {
 		sp.put("Position", "Software Engineer");
 		sp.put("Degree", "Master in computer science");
 		sp.put("Email+Address", "meghanathreddy.nani@gmail.com");
-		sp.put("Puzzle", getpuzzleSolution("ABCD"));
-
 	}
 
 	private static String getpuzzleSolution(String input) {
-
+		input = input.substring(input.indexOf("ABCD") + 5, input.length());
+		String[] split = input.split("\n");
+		Map<String, Integer> conditions = new HashMap<String, Integer>();
+		for (int i = 0; i < split.length; i++) {
+			char a = split[i].charAt(0);
+			if (split[i].contains(">")) {
+				split[i].indexOf(">");
+				conditions.put(a + ">", split[i].indexOf(">"));
+			} else if (split[i].contains("<")) {
+				split[i].indexOf("<");
+				conditions.put(a + "<", split[i].indexOf("<"));
+			} else if (split[i].contains("=")) {
+				conditions.put(a + "=", split[i].indexOf("="));
+			}
+		}
+		setValues(conditions);
 		StringBuffer sb = new StringBuffer();
-		sb.append(input);
+		sb.append(" ABCD");
 		sb.append("\n");
+		input = "ABCD";
 		for (char firstIteration : input.toCharArray()) {
 			int x = firstIteration;
 			sb.append(firstIteration);
@@ -46,7 +64,25 @@ public class BussinessLogic {
 		return sb.toString().trim();
 	}
 
-	public static String getResponse(String query) {
+	private static List<String> setValues(Map<String, Integer> conditions) {
+
+		String condt = conditions.toString().replaceAll("=1", "A").replaceAll("=2", "B").replaceAll("=3", "C")
+				.replaceAll("=4", "D");
+		condt = condt.substring(condt.indexOf("{") + 1, condt.indexOf("}"));
+		List<String> conditionsList = new ArrayList<String>();
+		for (String value : condt.split(",")) {
+			if (value.contains("<")) {
+				StringBuffer sb = new StringBuffer(value);
+				value = sb.reverse().toString().replace("<", ">");
+				conditionsList.add(value);
+			} else {
+				conditionsList.add(value);
+			}
+		}
+		return conditionsList;
+	}
+
+	public static String getResponse(String query) throws UnsupportedEncodingException {
 		String[] params = query.split("&");
 		Map<String, String> map = new HashMap<String, String>();
 		for (String param : params) {
@@ -54,8 +90,10 @@ public class BussinessLogic {
 			String value = param.split("=")[1];
 			map.put(name, value);
 		}
-		if (sp.get(map.get("q")) != null)
+		if (map.get("q").equals("Puzzle"))
+			return getpuzzleSolution(URLDecoder.decode(map.get("d"), "UTF-8"));
+		else if (sp.get(map.get("q")) != null)
 			return sp.get(map.get("q"));
-		return "ok";
+		return "OK";
 	}
 }

@@ -1,29 +1,31 @@
 package bussiness;
 
+import java.util.Arrays;
+
 public class Test {
 	static String sp = "ABCD";
 
 	static void testMethod() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(" ABCD");
-		sb.append("\n");
-
-		for (char a : sp.toCharArray()) {
-			int x = a;
-			for (char b : sp.toCharArray()) {
-				int y = b;
-				if (x < y) {
-					sb.append(">");
-				} else if (x == y) {
-					sb.append("=");
-				} else {
-					sb.append("<");
-				}
+		int n=2;
+		int[][] arr = new int[n][n];
+		int inc = 1;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				arr[i][j] = inc;
+				inc++;
 			}
-			sb.append("\n");
 		}
-		System.out.println(sb.toString().trim());
 
+		String lineSeparator = System.lineSeparator();
+		StringBuilder sb = new StringBuilder();
+
+		for (int[] row : arr) {
+		    sb.append(Arrays.toString(row))
+		      .append(lineSeparator);
+		}
+
+		String result = sb.toString();
+		System.out.println(result);
 	}
 
 	public static void main(String[] args) {

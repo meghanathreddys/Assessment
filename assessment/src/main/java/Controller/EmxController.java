@@ -1,7 +1,6 @@
 package Controller;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,8 +20,6 @@ public class EmxController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println(req.getReader().lines().collect(Collectors.joining(System.lineSeparator())));
-		System.out.println(req.getQueryString());
 		resp.setContentType("text/plain");
 		try {
 			resp.getWriter().write(BussinessLogic.getResponse(req.getQueryString()));
